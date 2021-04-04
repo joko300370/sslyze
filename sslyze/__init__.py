@@ -22,18 +22,13 @@ from sslyze.server_connectivity import (
 )
 
 # Classes for setting up scan commands and extra arguments
-from sslyze.plugins.scan_commands import ScanCommand, ScanCommandType
-from sslyze.plugins.certificate_info.implementation import CertificateInfoExtraArguments
-
-from sslyze.json import JsonEncoder
+from sslyze.plugins.scan_commands import ScanCommand
+from sslyze.plugins.certificate_info.implementation import CertificateInfoExtraArgument
 
 # Classes for scanning the servers
 from sslyze.scanner import (
     ScanCommandError,
     ScanCommandErrorReasonEnum,
-    ScanCommandExtraArgumentsDict,
-    ScanCommandResultsDict,
-    ScanCommandErrorsDict,
     ServerScanRequest,
     ServerScanResult,
     Scanner,
@@ -63,7 +58,7 @@ from sslyze.plugins.robot.implementation import RobotScanResult, RobotScanResult
 from sslyze.plugins.session_resumption.implementation import (
     SessionResumptionSupportScanResult,
     TlsResumptionSupportEnum,
-    SessionResumptionSupportExtraArguments,
+    SessionResumptionSupportExtraArgument,
 )
 from sslyze.plugins.compression_plugin import CompressionScanResult
 from sslyze.plugins.early_data_plugin import EarlyDataScanResult

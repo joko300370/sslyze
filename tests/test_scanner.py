@@ -14,7 +14,7 @@ from tests.markers import can_only_run_on_linux_64
 from tests.mock_plugins import (
     MockPlugin1ScanResult,
     MockPlugin2ScanResult,
-    MockPlugin1ExtraArguments,
+    MockPlugin1ExtraArgument,
     ScanCommandForTests,
     ScanCommandForTestsRepository,
     MockPlugin1Implementation,
@@ -36,7 +36,7 @@ class TestServerScanRequest:
                 server_info=ServerConnectivityInfoFactory.create(),
                 # With an extra argument for one command
                 scan_commands_extra_arguments={
-                    ScanCommandForTests.MOCK_COMMAND_1: MockPlugin1ExtraArguments(extra_field="test")
+                    ScanCommandForTests.MOCK_COMMAND_1: MockPlugin1ExtraArgument(extra_field="test")
                 },
                 # But that specific scan command was not queued
                 scan_commands={ScanCommandForTests.MOCK_COMMAND_2},
@@ -82,7 +82,7 @@ class TestScanner:
             scan_commands={ScanCommandForTests.MOCK_COMMAND_1},
             # And the command takes an extra argument
             scan_commands_extra_arguments={
-                ScanCommandForTests.MOCK_COMMAND_1: MockPlugin1ExtraArguments(extra_field="test")
+                ScanCommandForTests.MOCK_COMMAND_1: MockPlugin1ExtraArgument(extra_field="test")
             },
         )
 

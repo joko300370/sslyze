@@ -36,25 +36,21 @@ def main() -> None:
         print(f"\nResults for {server_scan_result.server_info.server_location.hostname}:")
 
         # Scan commands that were run with no errors
-        try:
-            ssl2_result = server_scan_result.scan_commands_results[ScanCommand.SSL_2_0_CIPHER_SUITES]
+        ssl2_result = server_scan_result.scan_commands_results.ssl_2_0_cipher_suites
+        if ssl2_result:
             print("\nAccepted cipher suites for SSL 2.0:")
             for accepted_cipher_suite in ssl2_result.accepted_cipher_suites:
                 print(f"* {accepted_cipher_suite.cipher_suite.name}")
-        except KeyError:
-            pass
 
-        try:
-            certinfo_result = server_scan_result.scan_commands_results[ScanCommand.CERTIFICATE_INFO]
+        certinfo_result = server_scan_result.scan_commands_results.certificate_info
+        if certinfo_result:
             print("\nCertificate info:")
             for cert_deployment in certinfo_result.certificate_deployments:
                 print(f"Leaf certificate: \n{cert_deployment.received_certificate_chain_as_pem[0]}")
-        except KeyError:
-            pass
 
         # Scan commands that were run with errors
-        for scan_command, error in server_scan_result.scan_commands_errors.items():
-            print(f"\nError when running {scan_command}:\n{error.exception_trace}")
+        for scan_command_error in server_scan_result.scan_commands_errors:
+            print(f"\nError when running {scan_command_error.scan_command}:\n{scan_command_error.exception_trace}")
 
 
 if __name__ == "__main__":
@@ -99,13 +95,15 @@ def basic_example() -> None:
         print(f"\nResults for {server_scan_result.server_info.server_location.hostname}:")
 
         # SSL 2.0 results
-        ssl2_result = server_scan_result.scan_commands_results[ScanCommand.SSL_2_0_CIPHER_SUITES]
-        print("\nAccepted cipher suites for SSL 2.0:")
-        for accepted_cipher_suite in ssl2_result.accepted_cipher_suites:
-            print(f"* {accepted_cipher_suite.cipher_suite.name}")
+        ssl2_result = server_scan_result.scan_commands_results.ssl_2_0_cipher_suites
+        if ssl2_result:
+            print("\nAccepted cipher suites for SSL 2.0:")
+            for accepted_cipher_suite in ssl2_result.accepted_cipher_suites:
+                print(f"* {accepted_cipher_suite.cipher_suite.name}")
 
         # Certificate info results
-        certinfo_result = server_scan_result.scan_commands_results[ScanCommand.CERTIFICATE_INFO]
-        print("\nCertificate info:")
-        for cert_deployment in certinfo_result.certificate_deployments:
-            print(f"Leaf certificate: \n{cert_deployment.received_certificate_chain_as_pem[0]}")
+        certinfo_result = server_scan_result.scan_commands_results.certificate_info
+        if certinfo_result:
+            print("\nCertificate info:")
+            for cert_deployment in certinfo_result.certificate_deployments:
+                print(f"Leaf certificate: \n{cert_deployment.received_certificate_chain_as_pem[0]}")

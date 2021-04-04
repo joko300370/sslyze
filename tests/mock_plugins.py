@@ -2,33 +2,22 @@
 """
 
 from dataclasses import dataclass
+from enum import Enum
 from typing import Optional, List, ClassVar, Type, Dict, Set
 
 from sslyze.plugins.plugin_base import (
     ScanCommandImplementation,
     ScanJob,
     ScanCommandResult,
-    ScanCommandExtraArguments,
+    ScanCommandExtraArgument,
     ScanJobResult,
 )
 from sslyze.server_connectivity import ServerConnectivityInfo
 
-try:
-    # Python 3.7
-    from typing_extensions import Literal
-except ModuleNotFoundError:
-    # Python 3.8+
-    from typing import Literal  # type: ignore
 
-
-ScanCommandForTestsType = Literal[
-    "mock1", "mock2", "mock3", "mock4",
-]
-
-
-class ScanCommandForTests:
-    MOCK_COMMAND_1: Literal["mock1"] = "mock1"
-    MOCK_COMMAND_2: Literal["mock2"] = "mock2"
+class ScanCommandForTests(str, Enum):
+    MOCK_COMMAND_1 = "mock1"
+    MOCK_COMMAND_2 = "mock2"
 
     def get_implementation_cls(self):
         return _IMPLEMENTATION_CLASSES[self]
@@ -36,16 +25,16 @@ class ScanCommandForTests:
 
 class ScanCommandForTestsRepository:
     @staticmethod
-    def get_implementation_cls(scan_command: ScanCommandForTestsType) -> Type["ScanCommandImplementation"]:
+    def get_implementation_cls(scan_command: ScanCommandForTests) -> Type["ScanCommandImplementation"]:
         return _IMPLEMENTATION_CLASSES[scan_command]
 
     @staticmethod
-    def get_all_scan_commands() -> Set[ScanCommandForTestsType]:
+    def get_all_scan_commands() -> Set[ScanCommandForTests]:
         return set(_IMPLEMENTATION_CLASSES.keys())
 
 
 @dataclass(frozen=True)
-class MockPlugin1ExtraArguments(ScanCommandExtraArguments):
+class MockPlugin1ExtraArgument(ScanCommandExtraArgument):
     extra_field: str
 
 
@@ -69,7 +58,7 @@ class _MockPluginImplementation(ScanCommandImplementation):
 
     @classmethod
     def scan_jobs_for_scan_command(
-        cls, server_info: ServerConnectivityInfo, extra_arguments: Optional[MockPlugin1ExtraArguments] = None
+        cls, server_info: ServerConnectivityInfo, extra_arguments: Optional[MockPlugin1ExtraArgument] = None
     ) -> List[ScanJob]:
         # Create a bunch of "do nothing" jobs to imitate a real plugin
         scan_jobs = [
@@ -100,7 +89,7 @@ class MockPlugin2Implementation(_MockPluginImplementation):
     result_cls = MockPlugin2ScanResult
 
 
-_IMPLEMENTATION_CLASSES: Dict[ScanCommandForTestsType, Type["ScanCommandImplementation"]] = {
+_IMPLEMENTATION_CLASSES: Dict[ScanCommandForTests, Type["ScanCommandImplementation"]] = {
     ScanCommandForTests.MOCK_COMMAND_1: MockPlugin1Implementation,
     ScanCommandForTests.MOCK_COMMAND_2: MockPlugin2Implementation,
 }
